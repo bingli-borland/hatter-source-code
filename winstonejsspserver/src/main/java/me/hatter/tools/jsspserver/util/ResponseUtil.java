@@ -1,13 +1,17 @@
 package me.hatter.tools.jsspserver.util;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import me.hatter.tools.commons.misc.ETags;
 import me.hatter.tools.commons.reflect.ReflectUtil;
+import me.hatter.tools.commons.string.StringUtil;
 
 public class ResponseUtil {
 
@@ -61,5 +65,36 @@ public class ResponseUtil {
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public static boolean printBytes(HttpServletRequest httpRequest, HttpServletResponse httpResponse,
+                                     String contentType, byte[] bytes) throws IOException {
+
+        String etag = ETags.simple().calc(bytes);
+        if (checkETag(httpRequest, httpResponse, etag, true)) {
+            return true;
+        }
+        if (contentType.startsWith("text/") && (!contentType.contains("charset"))) {
+            contentType = contentType + ";charset=UTF-8";
+        }
+        httpResponse.setContentType(contentType);
+        httpResponse.setHeader("ETag", etag);
+        httpResponse.setHeader("Cache-control", "max-age=600");
+        httpResponse.getOutputStream().write(bytes);
+        httpResponse.getOutputStream().flush();
+        return true;
+    }
+
+    public static boolean checkETag(HttpServletRequest httpRequest, HttpServletResponse httpResponse, String etag,
+                                    boolean enableCacheBasedOnTime) {
+        String reqEtag = httpRequest.getHeader("If-None-Match");
+        if (StringUtil.equals(reqEtag, etag)) {
+            if (enableCacheBasedOnTime) {
+                httpResponse.setHeader("Cache-control", "max-age=600");
+            }
+            httpResponse.setStatus(304); // the cached version is ok
+            return true;
+        }
+        return false;
     }
 }
