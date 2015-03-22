@@ -27,7 +27,7 @@ public class TOTP {
         }
     }
 
-    private static byte[] hexStr2Bytes(String hex) {
+    static byte[] hexStr2Bytes(String hex) {
         // Adding one byte to get the right conversion
         // Values starting with "0" can be converted
         byte[] bArray = new BigInteger("10" + hex, 16).toByteArray();
