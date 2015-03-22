@@ -355,7 +355,7 @@ public class IOUtil {
     }
 
     // with buffered -------------------------------------------------------------------------------------
-    public FilePrintWriter newFilePrintWriter(File file) {
+    public static FilePrintWriter newFilePrintWriter(File file) {
         try {
             return new FilePrintWriter(file);
         } catch (Exception e) {
@@ -363,7 +363,7 @@ public class IOUtil {
         }
     }
 
-    public FilePrintWriter newFilePrintWriter(File file, String charset) {
+    public static FilePrintWriter newFilePrintWriter(File file, String charset) {
         try {
             return new FilePrintWriter(file, charset);
         } catch (Exception e) {
@@ -371,7 +371,7 @@ public class IOUtil {
         }
     }
 
-    public FileBufferedWriter newFileBufferedWriter(File file) {
+    public static FileBufferedWriter newFileBufferedWriter(File file) {
         try {
             return new FileBufferedWriter(file);
         } catch (Exception e) {
@@ -379,7 +379,7 @@ public class IOUtil {
         }
     }
 
-    public FileBufferedWriter newFileBufferedWriter(File file, String charset) {
+    public static FileBufferedWriter newFileBufferedWriter(File file, String charset) {
         try {
             return new FileBufferedWriter(file, charset);
         } catch (Exception e) {
@@ -387,7 +387,7 @@ public class IOUtil {
         }
     }
 
-    public FileBufferedReader newFileBufferedReader(File file) {
+    public static FileBufferedReader newFileBufferedReader(File file) {
         try {
             return new FileBufferedReader(file);
         } catch (Exception e) {
@@ -395,7 +395,7 @@ public class IOUtil {
         }
     }
 
-    public FileBufferedReader newFileBufferedReader(File file, String charset) {
+    public static FileBufferedReader newFileBufferedReader(File file, String charset) {
         try {
             return new FileBufferedReader(file, charset);
         } catch (Exception e) {
@@ -403,11 +403,35 @@ public class IOUtil {
         }
     }
 
-    public StringBufferedReader newStringBufferedReader(String s) {
+    public static StringBufferedReader newStringBufferedReader(String s) {
         return new StringBufferedReader(s);
     }
 
-    public StringPrintWriter newStringPrintWriter() {
+    public static StringPrintWriter newStringPrintWriter() {
         return new StringPrintWriter();
+    }
+
+    public static byte[] bytes(String str) {
+        return bytes(str, CHARSET_UTF8);
+    }
+
+    public static byte[] bytes(String str, String charset) {
+        try {
+            return (str == null) ? null : str.getBytes(charset);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String str(byte[] bytes) {
+        return str(bytes, CHARSET_UTF8);
+    }
+
+    public static String str(byte[] bytes, String charset) {
+        try {
+            return (bytes == null) ? null : new String(bytes, charset);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
