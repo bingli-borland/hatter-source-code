@@ -1,5 +1,0 @@
-<%
-  $EACH(images, function(img, i) {%>
-    <span><a href="images/<%=img.getBigName()%>" target="_blank"><img src="images/<%=img.getSmallName()%>" style="margin:5px;"></a><span>
-  <%});
-%>
