@@ -21,7 +21,8 @@ public class Sign {
     public static void main(String[] args) throws Exception {
         // Generate new key
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        keyPairGenerator.initialize(2048);
+//        keyPairGenerator.initialize(2048);
+        keyPairGenerator.initialize(1024);
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
         PrivateKey privateKey = keyPair.getPrivate();
         String plaintext = "This is the message being signed";
